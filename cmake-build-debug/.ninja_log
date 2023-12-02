@@ -1,0 +1,5 @@
+# ninja log v5
+4	193	7232533046475541	build.ninja	66fa2e0587de8ea2
+13	743	7232533106268368	CMakeFiles/TicketMistressFront.dir/src/main.cpp.obj	a38fc6aa77904e24
+1	991	7232533108752029	CMakeFiles/TicketMistressFront.dir/src/Window.cpp.obj	62cfd16bfe7964e6
+992	1613	7232533114845913	TicketMistressFront.exe	2cfe86b46fdfc8d7

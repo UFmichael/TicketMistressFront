@@ -1,0 +1,3 @@
+C:/Users/micha/OneDrive/Documents/COP 3530/Project 3 Parking/PersonalGitFront/TicketMistressFront/cmake-build-debug/CMakeFiles/TicketMistressFront.dir
+C:/Users/micha/OneDrive/Documents/COP 3530/Project 3 Parking/PersonalGitFront/TicketMistressFront/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/micha/OneDrive/Documents/COP 3530/Project 3 Parking/PersonalGitFront/TicketMistressFront/cmake-build-debug/CMakeFiles/rebuild_cache.dir
