@@ -1,6 +1,3 @@
-//
-// Created by micha on 12/1/2023.
-//
 #include <iostream>
 #include "Window.h"
 
@@ -57,6 +54,7 @@ std::vector<string> Window::start(){
     string name = "";
     string make = "";
     string model = "";
+    vector<string> infoVec = {name, make, model};
     int infoType = -1;
     int width = 25;
     int height = 16;
@@ -118,19 +116,11 @@ std::vector<string> Window::start(){
                 }
                 // in any of the text rectangles
             }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
-//                if (name.size() != 0){
-//                    name[0] = toupper(name[0]);
-//                    for (unsigned int i = 1; i < name.size(); i++){
-//                        name[i] = tolower(name[i]);
-//                    }
-                    //window.close();
-                    vector<string> infoVec;
-                    infoVec.push_back(name);
-                    infoVec.push_back(make);
-                    infoVec.push_back(model);
-                    return infoVec;
-//                }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && event.type == sf::Event::KeyPressed) {
+                infoVec[0] = name;
+                infoVec[1] = make;
+                infoVec[2] = model;
+                SecondScreen(infoVec, window);
             }
 
             if(infoType == 0){
@@ -151,7 +141,6 @@ std::vector<string> Window::start(){
 //                }
                 }
             }
-
             if(infoType == 1){
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace)) {
                     if (event.type == sf::Event::KeyPressed) {
@@ -217,9 +206,25 @@ std::vector<string> Window::start(){
 
         window.display();
     }
-    vector<string> infoVect;
-    infoVect.push_back(name);
-    infoVect.push_back(make);
-    infoVect.push_back(model);
-    return infoVect;
+    infoVec[0] = name;
+    infoVec[1] = make;
+    infoVec[2] = model;
+    return infoVec;
+}
+
+void Window::SecondScreen(vector<string>& infoVec, sf::RenderWindow& window) {
+    while(window.isOpen()){
+        window.clear(sf::Color::White);
+        sf::Event event;
+        while(window.pollEvent(event)){
+            if (event.type == sf::Event::Closed) {
+                window.close();
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+                window.close();
+            }
+        }
+        window.display();
+    }
+
 };
