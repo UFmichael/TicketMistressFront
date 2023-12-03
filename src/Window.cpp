@@ -382,10 +382,11 @@ void namesToPics(){
 void Window::SecondScreen(vector<string>& infoVec, sf::RenderWindow& window) {
     vector<vector<string>> data;
     data = {{"florida", "toyota", "four door", "blue", "2:37pm"},{"florida", "toyota", "four door", "blue", "2:38pm"},{"florida", "toyota", "four door", "blue", "2:39pm"},{"florida", "toyota", "four door", "blue", "2:30pm"},{"florida", "toyota", "four door", "blue", "2:31pm"},{"florida", "toyota", "four door", "blue", "2:32pm"},{"florida", "toyota", "four door", "blue", "2:33pm"},{"florida", "toyota", "four door", "blue", "2:34pm"}};
+    int curr = 0;
+    int scrollVal = 0;
     while(window.isOpen()){
         window.clear(sf::Color::White);
         sf::Event event;
-
         int max = 5;
         if(data.size() < max){
             max = data.size();
@@ -396,33 +397,36 @@ void Window::SecondScreen(vector<string>& infoVec, sf::RenderWindow& window) {
             outlineBox.setSize(sf::Vector2f(600, 50));
             outlineBox.setOutlineColor(sf::Color::Black);
             outlineBox.setOutlineThickness(5);
+            if(i == curr){
+                outlineBox.setOutlineThickness(10);
+            }
             window.draw(outlineBox);
 
             string infoString1 = "";
             string infoString2 = "";
-            for(int j = 0; j < data[i].size(); j++){
+            for(int j = 0; j < data[scrollVal+i].size(); j++){
                 if(j == 0){
                     infoString1 += "State: ";
-                    infoString1 += data[i][j];
+                    infoString1 += data[scrollVal+i][j];
                     infoString1 += "\t";
                 }
                 else if(j == 1){
                     infoString1 += "Make: ";
-                    infoString1 += data[i][j];
+                    infoString1 += data[scrollVal+i][j];
                     infoString1 += "\t";
                 }
                 else if(j == 2){
                     infoString1 += "Model: ";
-                    infoString1 += data[i][j];
+                    infoString1 += data[scrollVal+i][j];
                 }
                 else if(j == 3){
                     infoString2 += "Color: ";
-                    infoString2 += data[i][j];
+                    infoString2 += data[scrollVal+i][j];
                     infoString2 += "\t";
                 }
                 else if(j == 4){
                     infoString2 += "Time: ";
-                    infoString2 += data[i][j];
+                    infoString2 += data[scrollVal+i][j];
                 }
                 else{
                     std::cout << "Error" << "\n";
@@ -433,7 +437,7 @@ void Window::SecondScreen(vector<string>& infoVec, sf::RenderWindow& window) {
             printText(infoString2, false, 400, 75+ i*70 , &window, 18, false, true);
         }
 
-        printText(to_string(1)+"\/" + to_string(data.size()), false, 400, 75+ max*70 -30 , &window, 18, false, true);
+        printText(to_string(1+curr + scrollVal)+"\/" + to_string(data.size()), false, 400, 75+ max*70 -30 , &window, 18, false, true);
 
         while(window.pollEvent(event)){
             if (event.type == sf::Event::Closed) {
@@ -441,6 +445,25 @@ void Window::SecondScreen(vector<string>& infoVec, sf::RenderWindow& window) {
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
                 window.close();
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && event.type == sf::Event::KeyPressed) {
+                if(curr <4) {
+                    curr++;
+                }else{
+                    if(scrollVal + 2 != max){
+                        scrollVal++;
+                    }
+                }
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && event.type == sf::Event::KeyPressed) {
+                if(curr > 0) {
+                    curr--;
+                }else{
+                    if(scrollVal != 0){
+                        scrollVal--;
+                    }
+                }
+
             }
         }
         window.display();
