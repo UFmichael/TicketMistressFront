@@ -116,11 +116,25 @@ std::vector<string> Window::start(){
                     if (!font.loadFromFile("../src/font.ttf")){
                         throw("Font broke");
                     }
-//                    sf::Text text;
-//                    text.setFont(font);
-//                    text.setCharacterSize(18);
-//                    text.setStyle(sf::Text::Regular);
-//                    text.setString(statesList[i]);
+                }
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && event.type == sf::Event::KeyPressed) {
+                    if(listIndex+5 != statesList.size()) {
+                        listIndex++;
+                    }
+                }
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && event.type == sf::Event::KeyPressed) {
+                    if(listIndex != 0) {
+                        listIndex--;
+                    }
+                }
+                auto position = sf::Mouse::getPosition(window);
+                if(sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+                    for (int i = 0; i < statesBox.size(); i++) {
+                        if (statesBox[i].getGlobalBounds().contains(position.x, position.y)) {
+                            name = statesList[i + listIndex];
+                            stateSelection = false;
+                        }
+                    }
                 }
             }
             if (event.type == sf::Event::Closed) {
@@ -150,6 +164,7 @@ std::vector<string> Window::start(){
                     infoType = -1;
                 }
                 // in any of the text rectangles
+                listIndex = 0;
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && event.type == sf::Event::KeyPressed) {
                 infoVec[0] = name;
@@ -158,21 +173,6 @@ std::vector<string> Window::start(){
                 SecondScreen(infoVec, window);
             }
 
-//            if(infoType == 0){
-//                statesBox.clear();
-//                    for(int i = 0; i < 5; i++) {
-//                        sf::RectangleShape outlineBox;//= sf::Rect(400, 350, 100, 50);
-//                        outlineBox.setPosition(200, 260 + 50*i);
-//                        outlineBox.setSize(sf::Vector2f(400, 50));
-//                        outlineBox.setOutlineColor(sf::Color::Black);
-//                        outlineBox.setOutlineThickness(5);
-//                        statesBox.push_back(outlineBox);
-//                        sf::Font font;
-//                        if (!font.loadFromFile("../src/font.ttf")){
-//                            throw("Font broke");
-//                        }
-//                }
-//            }
             if(infoType == 1){
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace)) {
                     if (event.type == sf::Event::KeyPressed) {
