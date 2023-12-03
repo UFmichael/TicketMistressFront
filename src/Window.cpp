@@ -12,7 +12,7 @@ sf::RectangleShape Window::setRectangle(sf::Vector2f s,float x, float y, float o
 
 void Window::printText(string txt, bool u, float x, float y, sf::RenderWindow *window, int f_size, bool w, bool bold){
     sf::Font font;
-    if (!font.loadFromFile("../TicketMistressFront/src/font.ttf")){
+    if (!font.loadFromFile("../src/font.ttf")){
         throw("Font broke");
     }
 
@@ -50,7 +50,19 @@ Window::Window() {
 }
 
 std::vector<string> Window::start(){
+
+    std::vector<std::string> statesList = {
+            "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware",
+            "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky",
+            "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri",
+            "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York",
+            "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island",
+            "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington",
+            "West Virginia", "Wisconsin", "Wyoming"
+    };
+
     int curr = 0;
+    int listIndex = 0;
     string name = "";
     string make = "";
     string model = "";
@@ -58,6 +70,8 @@ std::vector<string> Window::start(){
     int infoType = -1;
     int width = 25;
     int height = 16;
+    bool selected = false;
+    bool stateSelection = false;
     sf::RenderWindow window(sf::VideoMode(32*width, 32*height+100), "Ticket Mistress", sf::Style::Close);
     window.setFramerateLimit(60);
     sf::RectangleShape bkgd = setRectangle(sf::Vector2f(800,600),0,0,0,0, sf::Color::White);
@@ -82,13 +96,33 @@ std::vector<string> Window::start(){
     //ModelBox.setFillColor(sf::Color::Black);
     ModelBox.setOutlineColor(sf::Color::Black);
     ModelBox.setOutlineThickness(10);
+    std::vector<sf::RectangleShape> statesBox;
 
     while (window.isOpen())
     {
         sf::Event event;
         while (window.pollEvent(event))
         {
-
+            if(stateSelection){
+                statesBox.clear();
+                for(int i = 0; i < 5; i++) {
+                    sf::RectangleShape outlineBox;//= sf::Rect(400, 350, 100, 50);
+                    outlineBox.setPosition(200, 260 + 50*i);
+                    outlineBox.setSize(sf::Vector2f(400, 50));
+                    outlineBox.setOutlineColor(sf::Color::Black);
+                    outlineBox.setOutlineThickness(5);
+                    statesBox.push_back(outlineBox);
+                    sf::Font font;
+                    if (!font.loadFromFile("../src/font.ttf")){
+                        throw("Font broke");
+                    }
+//                    sf::Text text;
+//                    text.setFont(font);
+//                    text.setCharacterSize(18);
+//                    text.setStyle(sf::Text::Regular);
+//                    text.setString(statesList[i]);
+                }
+            }
             if (event.type == sf::Event::Closed) {
                 window.close();
                 vector<string> emptyVec;
@@ -104,6 +138,7 @@ std::vector<string> Window::start(){
                 auto position = sf::Mouse::getPosition(window);
                 if(StateBox.getGlobalBounds().contains(position.x, position.y)){
                     infoType = 0;
+                    stateSelection = true;
                 }
                 else if(MakeBox.getGlobalBounds().contains(position.x, position.y)){
                     infoType = 1;
@@ -123,24 +158,21 @@ std::vector<string> Window::start(){
                 SecondScreen(infoVec, window);
             }
 
-            if(infoType == 0){
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace)) {
-                    if (event.type == sf::Event::KeyPressed) {
-                        if (name.size() != 0) {
-                            name.resize(name.size() - 1);
-                        }
-                    }
-                }
-                else if (event.type == sf::Event::TextEntered) {
-//                if (isalpha(event.text.unicode)) { //This line gets rid of all non alphabet input.
-                    if (name.size() < 20) {
-                        if (event.text.unicode < 128) {
-                            name += static_cast<char>(event.text.unicode);
-                        }
-                    }
+//            if(infoType == 0){
+//                statesBox.clear();
+//                    for(int i = 0; i < 5; i++) {
+//                        sf::RectangleShape outlineBox;//= sf::Rect(400, 350, 100, 50);
+//                        outlineBox.setPosition(200, 260 + 50*i);
+//                        outlineBox.setSize(sf::Vector2f(400, 50));
+//                        outlineBox.setOutlineColor(sf::Color::Black);
+//                        outlineBox.setOutlineThickness(5);
+//                        statesBox.push_back(outlineBox);
+//                        sf::Font font;
+//                        if (!font.loadFromFile("../src/font.ttf")){
+//                            throw("Font broke");
+//                        }
 //                }
-                }
-            }
+//            }
             if(infoType == 1){
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace)) {
                     if (event.type == sf::Event::KeyPressed) {
@@ -150,13 +182,11 @@ std::vector<string> Window::start(){
                     }
                 }
                 else if (event.type == sf::Event::TextEntered) {
-//                if (isalpha(event.text.unicode)) { //This line gets rid of all non alphabet input.
                     if (make.size() < 20) {
                         if (event.text.unicode < 128) {
                             make += static_cast<char>(event.text.unicode);
                         }
                     }
-//                }
                 }
             }
             if(infoType == 2){
@@ -168,13 +198,11 @@ std::vector<string> Window::start(){
                     }
                 }
                 else if (event.type == sf::Event::TextEntered) {
-//                if (isalpha(event.text.unicode)) { //This line gets rid of all non alphabet input.
                     if (model.size() < 20) {
                         if (event.text.unicode < 128) {
                             model += static_cast<char>(event.text.unicode);
                         }
                     }
-//                }
                 }
             }
         }
@@ -184,6 +212,7 @@ std::vector<string> Window::start(){
         window.draw(StateBox);
         window.draw(MakeBox);
         window.draw(ModelBox);
+
         printText("Welcome To Ticket Mistress!", true, width*16, 16 * height + 50 -150, &window, 24, true, true);
 
         if(infoType == 0){
@@ -204,6 +233,15 @@ std::vector<string> Window::start(){
             printText("Your Car Model: "+model, false, width*16, 16 * height + 50 +75 , &window, 18, false, true);
         };
 
+        if(!selected && infoType == 0){
+            for(auto imlazy : statesBox){
+                window.draw(imlazy);
+            }
+            for(int i = 0; i < 5; i++){
+                printText(statesList[i + listIndex], false, 400, 50 * i + 280, &window, 18, true, true);
+            }
+        }
+
         window.display();
     }
     infoVec[0] = name;
@@ -213,9 +251,59 @@ std::vector<string> Window::start(){
 }
 
 void Window::SecondScreen(vector<string>& infoVec, sf::RenderWindow& window) {
+    vector<vector<string>> data;
+    data = {{"florida", "toyota", "four door", "blue", "2:37pm"},{"florida", "toyota", "four door", "blue", "2:38pm"},{"florida", "toyota", "four door", "blue", "2:39pm"},{"florida", "toyota", "four door", "blue", "2:30pm"}};
     while(window.isOpen()){
         window.clear(sf::Color::White);
         sf::Event event;
+
+        int max = 7;
+        if(data.size() < max){
+            max = data.size();
+        }
+        for(int i = 0; i < max; i++) {
+            sf::RectangleShape outlineBox;//= sf::Rect(400, 350, 100, 50);
+            outlineBox.setPosition(100, 100 + 70*i);
+            outlineBox.setSize(sf::Vector2f(600, 50));
+            outlineBox.setOutlineColor(sf::Color::Black);
+            outlineBox.setOutlineThickness(5);
+            window.draw(outlineBox);
+
+            string infoString1 = "";
+            string infoString2 = "";
+            for(int j = 0; j < data[i].size(); j++){
+                if(j == 0){
+                    infoString1 += "State: ";
+                    infoString1 += data[i][j];
+                    infoString1 += "\t";
+                }
+                else if(j == 1){
+                    infoString1 += "Make: ";
+                    infoString1 += data[i][j];
+                    infoString1 += "\t";
+                }
+                else if(j == 2){
+                    infoString1 += "Model: ";
+                    infoString1 += data[i][j];
+                }
+                else if(j == 3){
+                    infoString2 += "Color: ";
+                    infoString2 += data[i][j];
+                    infoString2 += "\t";
+                }
+                else if(j == 4){
+                    infoString2 += "Time: ";
+                    infoString2 += data[i][j];
+                }
+                else{
+                    std::cout << "Error" << "\n";
+                }
+
+            }
+            printText(infoString1, false, 400, 115+ i*70 , &window, 18, false, true);
+            printText(infoString2, false, 400, 135+ i*70 , &window, 18, false, true);
+        }
+
         while(window.pollEvent(event)){
             if (event.type == sf::Event::Closed) {
                 window.close();
