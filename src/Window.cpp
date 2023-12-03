@@ -140,7 +140,7 @@ std::vector<string> Window::start(){
                     statesBox.push_back(outlineBox);
                 }
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && event.type == sf::Event::KeyPressed) {
-                    if(listIndex+5 != statesList.size()) {
+                    if(listIndex != statesList.size()-1) {
                         listIndex++;
                     }
                 }
@@ -162,7 +162,7 @@ std::vector<string> Window::start(){
                 }
             }
 
-            if(makeSelection && event.type != sf::Event::KeyPressed){
+            if(makeSelection){
                 makesBox.clear();
 
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && event.type == sf::Event::KeyPressed) {
@@ -331,7 +331,7 @@ std::vector<string> Window::start(){
             for(auto nextMake : makesBox){
                 window.draw(nextMake);
             }
-            for (int i = 0; i < 5; ++i) {
+            for (int i = 0; i < 5; i++) {
                 //edit for make location
                 //states list changed to make list
                 printText(statesList[i + listIndex], false, 400, 50 * i + 350, &window, 18, true, true);
@@ -342,7 +342,7 @@ std::vector<string> Window::start(){
             for(auto nextModel : modelsBox){
                 window.draw(nextModel);
             }
-            for (int i = 0; i < 3; ++i) {
+            for (int i = 0; i < 3; i++) {
                 //edit for make location
                 //states list changed to model list
                 printText(statesList[i + listIndex], false, 400, 50 * i + 430, &window, 18, true, true);
