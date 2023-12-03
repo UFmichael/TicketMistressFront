@@ -61,6 +61,22 @@ std::vector<string> Window::start(){
             "West Virginia", "Wisconsin", "Wyoming"
     };
 
+    std::vector<std::string> makesList = {
+            "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky",
+            "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri",
+            "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York",
+            "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island",
+            "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington",
+            "West Virginia", "Wisconsin", "Wyoming"
+    };
+
+    std::vector<std::string> modelsList = {
+            "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island",
+            "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington",
+            "West Virginia", "Wisconsin", "Wyoming"
+    };
+
+
     int curr = 0;
     int listIndex = 0;
     string name = "";
@@ -140,7 +156,7 @@ std::vector<string> Window::start(){
                     statesBox.push_back(outlineBox);
                 }
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && event.type == sf::Event::KeyPressed) {
-                    if(listIndex != statesList.size()-1) {
+                    if(listIndex+5 != statesList.size()) {
                         listIndex++;
                     }
                 }
@@ -156,6 +172,7 @@ std::vector<string> Window::start(){
                             name = statesList[i + listIndex];
                             stateSelection = false;
                             selected = false;
+                            infoType = -1;
                         }
                     }
                     //listIndex = 0;
@@ -168,7 +185,7 @@ std::vector<string> Window::start(){
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && event.type == sf::Event::KeyPressed) {
                     //states list should be changed to make list
 
-                    if(listIndex+5 != statesList.size()) {
+                    if(listIndex+5 != makesList.size()) {
                         listIndex++;
                     }
                 }
@@ -193,9 +210,10 @@ std::vector<string> Window::start(){
                             //makesBox[i]
                             if (makesBox[i].getGlobalBounds().contains(position.x, position.y)) {
                                 //mfake = makesBox[]
-                                make = statesList[i + listIndex];
+                                make = makesList[i + listIndex];
                                 makeSelection = false;
                                 selected = false;
+                                infoType = -1;
                             }
                         }
                         //listIndex = 0;
@@ -203,7 +221,8 @@ std::vector<string> Window::start(){
                 }
             }
 
-            if(modelSelection && event.type != sf::Event::KeyPressed){
+            if(modelSelection){
+                modelsBox.clear();
                 for(int i = 0; i < 3; i++) {
                     sf::RectangleShape outlineBox;//= sf::Rect(400, 350, 100, 50);
                     outlineBox.setPosition(200, 415 + 50*i);
@@ -211,12 +230,11 @@ std::vector<string> Window::start(){
                     outlineBox.setOutlineColor(sf::Color::Black);
                     outlineBox.setOutlineThickness(5);
                     modelsBox.push_back(outlineBox);
-                    sf::Font font;
                 }
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && event.type == sf::Event::KeyPressed) {
                     //states list should be changed to model list
 
-                    if(listIndex+5 != statesList.size()) {
+                    if(listIndex+3 != modelsList.size()) {
                         listIndex++;
                     }
                 }
@@ -232,8 +250,8 @@ std::vector<string> Window::start(){
                         //modelsBox[i]
                         if (modelsBox[i].getGlobalBounds().contains(position.x, position.y)) {
                             //mfake = modelsBox[]
-                            std::cout << listIndex << std::endl;
-                            model = statesList[i + listIndex];
+//                            std::cout << listIndex << std::endl;
+                            model = modelsList[i + listIndex];
                             modelSelection = false;
                             selected = false;
                             infoType = -1;
@@ -334,7 +352,7 @@ std::vector<string> Window::start(){
             for (int i = 0; i < 5; i++) {
                 //edit for make location
                 //states list changed to make list
-                printText(statesList[i + listIndex], false, 400, 50 * i + 350, &window, 18, true, true);
+                printText(makesList[i + listIndex], false, 400, 50 * i + 350, &window, 18, true, true);
             }
         }
         //working on this one
@@ -345,7 +363,7 @@ std::vector<string> Window::start(){
             for (int i = 0; i < 3; i++) {
                 //edit for make location
                 //states list changed to model list
-                printText(statesList[i + listIndex], false, 400, 50 * i + 430, &window, 18, true, true);
+                printText(modelsList[i + listIndex], false, 400, 50 * i + 430, &window, 18, true, true);
             }
         }
 
@@ -363,18 +381,18 @@ void namesToPics(){
 
 void Window::SecondScreen(vector<string>& infoVec, sf::RenderWindow& window) {
     vector<vector<string>> data;
-    data = {{"florida", "toyota", "four door", "blue", "2:37pm"},{"florida", "toyota", "four door", "blue", "2:38pm"},{"florida", "toyota", "four door", "blue", "2:39pm"},{"florida", "toyota", "four door", "blue", "2:30pm"}};
+    data = {{"florida", "toyota", "four door", "blue", "2:37pm"},{"florida", "toyota", "four door", "blue", "2:38pm"},{"florida", "toyota", "four door", "blue", "2:39pm"},{"florida", "toyota", "four door", "blue", "2:30pm"},{"florida", "toyota", "four door", "blue", "2:31pm"},{"florida", "toyota", "four door", "blue", "2:32pm"},{"florida", "toyota", "four door", "blue", "2:33pm"},{"florida", "toyota", "four door", "blue", "2:34pm"}};
     while(window.isOpen()){
         window.clear(sf::Color::White);
         sf::Event event;
 
-        int max = 7;
+        int max = 5;
         if(data.size() < max){
             max = data.size();
         }
         for(int i = 0; i < max; i++) {
             sf::RectangleShape outlineBox;//= sf::Rect(400, 350, 100, 50);
-            outlineBox.setPosition(100, 100 + 70*i);
+            outlineBox.setPosition(100, 40 + 70*i);
             outlineBox.setSize(sf::Vector2f(600, 50));
             outlineBox.setOutlineColor(sf::Color::Black);
             outlineBox.setOutlineThickness(5);
@@ -411,9 +429,11 @@ void Window::SecondScreen(vector<string>& infoVec, sf::RenderWindow& window) {
                 }
 
             }
-            printText(infoString1, false, 400, 115+ i*70 , &window, 18, false, true);
-            printText(infoString2, false, 400, 135+ i*70 , &window, 18, false, true);
+            printText(infoString1, false, 400, 55+ i*70 , &window, 18, false, true);
+            printText(infoString2, false, 400, 75+ i*70 , &window, 18, false, true);
         }
+
+        printText(to_string(1)+"\/" + to_string(data.size()), false, 400, 75+ max*70 -30 , &window, 18, false, true);
 
         while(window.pollEvent(event)){
             if (event.type == sf::Event::Closed) {
