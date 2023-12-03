@@ -12,7 +12,7 @@ sf::RectangleShape Window::setRectangle(sf::Vector2f s,float x, float y, float o
 
 void Window::printText(string txt, bool u, float x, float y, sf::RenderWindow *window, int f_size, bool w, bool bold){
     sf::Font font;
-    if (!font.loadFromFile("../src/font.ttf")){
+    if (!font.loadFromFile("../TicketMistressFront/src/font.ttf")){
         throw("Font broke");
     }
 
@@ -72,6 +72,8 @@ std::vector<string> Window::start(){
     int height = 16;
     bool selected = false;
     bool stateSelection = false;
+    bool makeSelection = false;
+    bool modelSelection = false;
     sf::RenderWindow window(sf::VideoMode(32*width, 32*height+100), "Ticket Mistress", sf::Style::Close);
     window.setFramerateLimit(60);
     sf::RectangleShape bkgd = setRectangle(sf::Vector2f(800,600),0,0,0,0, sf::Color::White);
@@ -96,15 +98,39 @@ std::vector<string> Window::start(){
     //ModelBox.setFillColor(sf::Color::Black);
     ModelBox.setOutlineColor(sf::Color::Black);
     ModelBox.setOutlineThickness(10);
-    std::vector<sf::RectangleShape> statesBox;
+    std::vector<sf::RectangleShape> statesBox, modelsBox, makesBox;
+
+    sf::Font font;
+    if (!font.loadFromFile("../TicketMistressFront/src/font.ttf")){
+        throw("Font broke");
+    }
 
     while (window.isOpen())
     {
         sf::Event event;
         while (window.pollEvent(event))
         {
+//            if(infoType = 0){
+//                stateSelection = true;
+//                makeSelection = false;
+//                modelSelection = false;
+//            }else if(infoType = 1){
+//                stateSelection = false;
+//                makeSelection = true;
+//                modelSelection = false;
+//            }else if(infoType = 2){
+//                stateSelection = false;
+//                makeSelection = false;
+//                modelSelection = true;
+//            }else{
+//                stateSelection = false;
+//                makeSelection = false;
+//                modelSelection = false;
+//            }
+//
             if(stateSelection){
                 statesBox.clear();
+
                 for(int i = 0; i < 5; i++) {
                     sf::RectangleShape outlineBox;//= sf::Rect(400, 350, 100, 50);
                     outlineBox.setPosition(200, 260 + 50*i);
@@ -112,10 +138,6 @@ std::vector<string> Window::start(){
                     outlineBox.setOutlineColor(sf::Color::Black);
                     outlineBox.setOutlineThickness(5);
                     statesBox.push_back(outlineBox);
-                    sf::Font font;
-                    if (!font.loadFromFile("../src/font.ttf")){
-                        throw("Font broke");
-                    }
                 }
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && event.type == sf::Event::KeyPressed) {
                     if(listIndex+5 != statesList.size()) {
@@ -128,15 +150,99 @@ std::vector<string> Window::start(){
                     }
                 }
                 auto position = sf::Mouse::getPosition(window);
-                if(sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+                if(sf::Mouse::isButtonPressed(sf::Mouse::Left) && infoType == 0) {
                     for (int i = 0; i < statesBox.size(); i++) {
                         if (statesBox[i].getGlobalBounds().contains(position.x, position.y)) {
                             name = statesList[i + listIndex];
                             stateSelection = false;
+                            selected = false;
                         }
+                    }
+                    //listIndex = 0;
+                }
+            }
+
+            if(makeSelection && event.type != sf::Event::KeyPressed){
+                makesBox.clear();
+
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && event.type == sf::Event::KeyPressed) {
+                    //states list should be changed to make list
+
+                    if(listIndex+5 != statesList.size()) {
+                        listIndex++;
+                    }
+                }
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && event.type == sf::Event::KeyPressed) {
+                    if(listIndex != 0) {
+                        listIndex--;
+                    }
+                }
+
+                for(int i = 0; i < 5; i++) {
+                    sf::RectangleShape outlineBox;//= sf::Rect(400, 350, 100, 50);
+                    outlineBox.setPosition(200, 335 + 50*i);
+                    outlineBox.setSize(sf::Vector2f(400, 50));
+                    outlineBox.setOutlineColor(sf::Color::Black);
+                    outlineBox.setOutlineThickness(5);
+                    makesBox.push_back(outlineBox);
+
+                    auto position = sf::Mouse::getPosition(window);
+                    if(sf::Mouse::isButtonPressed(sf::Mouse::Left) && infoType == 1) {
+                        //makesbox.size()
+                        for (int i = 0; i < makesBox.size(); i++) {
+                            //makesBox[i]
+                            if (makesBox[i].getGlobalBounds().contains(position.x, position.y)) {
+                                //mfake = makesBox[]
+                                make = statesList[i + listIndex];
+                                makeSelection = false;
+                                selected = false;
+                            }
+                        }
+                        //listIndex = 0;
                     }
                 }
             }
+
+            if(modelSelection && event.type != sf::Event::KeyPressed){
+                for(int i = 0; i < 3; i++) {
+                    sf::RectangleShape outlineBox;//= sf::Rect(400, 350, 100, 50);
+                    outlineBox.setPosition(200, 415 + 50*i);
+                    outlineBox.setSize(sf::Vector2f(400, 50));
+                    outlineBox.setOutlineColor(sf::Color::Black);
+                    outlineBox.setOutlineThickness(5);
+                    modelsBox.push_back(outlineBox);
+                    sf::Font font;
+                }
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && event.type == sf::Event::KeyPressed) {
+                    //states list should be changed to model list
+
+                    if(listIndex+5 != statesList.size()) {
+                        listIndex++;
+                    }
+                }
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && event.type == sf::Event::KeyPressed) {
+                    if(listIndex != 0) {
+                        listIndex--;
+                    }
+                }
+                auto position = sf::Mouse::getPosition(window);
+                if(sf::Mouse::isButtonPressed(sf::Mouse::Left) && infoType == 2) {
+                    //modelsbox.size()
+                    for (int i = 0; i < modelsBox.size(); i++) {
+                        //modelsBox[i]
+                        if (modelsBox[i].getGlobalBounds().contains(position.x, position.y)) {
+                            //mfake = modelsBox[]
+                            std::cout << listIndex << std::endl;
+                            model = statesList[i + listIndex];
+                            modelSelection = false;
+                            selected = false;
+                            infoType = -1;
+                        }
+                    }
+                    //listIndex = 0;
+                }
+            }
+
             if (event.type == sf::Event::Closed) {
                 window.close();
                 vector<string> emptyVec;
@@ -149,61 +255,41 @@ std::vector<string> Window::start(){
             }
 
             if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+
                 auto position = sf::Mouse::getPosition(window);
+                listIndex = 0;
                 if(StateBox.getGlobalBounds().contains(position.x, position.y)){
                     infoType = 0;
                     stateSelection = true;
+                    makeSelection = false;
+                    modelSelection = false;
                 }
                 else if(MakeBox.getGlobalBounds().contains(position.x, position.y)){
                     infoType = 1;
+                    stateSelection = false;
+                    makeSelection = true;
+                    modelSelection = false;
                 }
                 else if(ModelBox.getGlobalBounds().contains(position.x, position.y)){
                     infoType = 2;
+                    stateSelection = false;
+                    makeSelection = false;
+                    modelSelection = true;
                 }
                 else{
                     infoType = -1;
+                    stateSelection = false;
+                    makeSelection = false;
+                    modelSelection = false;
                 }
                 // in any of the text rectangles
-                listIndex = 0;
+                //listIndex = 0;
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && event.type == sf::Event::KeyPressed) {
                 infoVec[0] = name;
                 infoVec[1] = make;
                 infoVec[2] = model;
                 SecondScreen(infoVec, window);
-            }
-
-            if(infoType == 1){
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace)) {
-                    if (event.type == sf::Event::KeyPressed) {
-                        if (make.size() != 0) {
-                            make.resize(make.size() - 1);
-                        }
-                    }
-                }
-                else if (event.type == sf::Event::TextEntered) {
-                    if (make.size() < 20) {
-                        if (event.text.unicode < 128) {
-                            make += static_cast<char>(event.text.unicode);
-                        }
-                    }
-                }
-            }
-            if(infoType == 2){
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace)) {
-                    if (event.type == sf::Event::KeyPressed) {
-                        if (model.size() != 0) {
-                            model.resize(model.size() - 1);
-                        }
-                    }
-                }
-                else if (event.type == sf::Event::TextEntered) {
-                    if (model.size() < 20) {
-                        if (event.text.unicode < 128) {
-                            model += static_cast<char>(event.text.unicode);
-                        }
-                    }
-                }
             }
         }
 
@@ -234,11 +320,32 @@ std::vector<string> Window::start(){
         };
 
         if(!selected && infoType == 0){
-            for(auto imlazy : statesBox){
-                window.draw(imlazy);
+            for(auto nextState : statesBox){
+                window.draw(nextState);
             }
             for(int i = 0; i < 5; i++){
                 printText(statesList[i + listIndex], false, 400, 50 * i + 280, &window, 18, true, true);
+            }
+        }
+        if(!selected && infoType == 1){
+            for(auto nextMake : makesBox){
+                window.draw(nextMake);
+            }
+            for (int i = 0; i < 5; ++i) {
+                //edit for make location
+                //states list changed to make list
+                printText(statesList[i + listIndex], false, 400, 50 * i + 350, &window, 18, true, true);
+            }
+        }
+        //working on this one
+        if(!selected && infoType == 2){
+            for(auto nextModel : modelsBox){
+                window.draw(nextModel);
+            }
+            for (int i = 0; i < 3; ++i) {
+                //edit for make location
+                //states list changed to model list
+                printText(statesList[i + listIndex], false, 400, 50 * i + 430, &window, 18, true, true);
             }
         }
 
@@ -248,6 +355,10 @@ std::vector<string> Window::start(){
     infoVec[1] = make;
     infoVec[2] = model;
     return infoVec;
+}
+
+void namesToPics(){
+
 }
 
 void Window::SecondScreen(vector<string>& infoVec, sf::RenderWindow& window) {
