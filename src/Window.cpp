@@ -76,13 +76,19 @@ std::vector<string> Window::start(){
             "West Virginia", "Wisconsin", "Wyoming"
     };
 
+    std::vector<std::string> colorsList = {
+            "Blue", "Black", "Red", "Yellow", "Yellow1", "Yellow2", "Yellow3", "Yellow4"
+    };
+
+
 
     int curr = 0;
     int listIndex = 0;
     string name = "";
     string make = "";
     string model = "";
-    vector<string> infoVec = {name, make, model};
+    string color = "";
+    vector<string> infoVec = {name, make, model, color};
     int infoType = -1;
     int width = 25;
     int height = 16;
@@ -90,31 +96,39 @@ std::vector<string> Window::start(){
     bool stateSelection = false;
     bool makeSelection = false;
     bool modelSelection = false;
+    bool colorSelection = false;
     sf::RenderWindow window(sf::VideoMode(32*width, 32*height+100), "Ticket Mistress", sf::Style::Close);
     window.setFramerateLimit(60);
     sf::RectangleShape bkgd = setRectangle(sf::Vector2f(800,600),0,0,0,0, sf::Color::White);
 
     sf::RectangleShape StateBox;//= sf::Rect(400, 350, 100, 50);
-    StateBox.setPosition(200, 210);
+    StateBox.setPosition(200, 210-100);
     StateBox.setSize(sf::Vector2f(400,50));
     //StateBox.setFillColor(sf::Color::Black);
     StateBox.setOutlineColor(sf::Color::Black);
     StateBox.setOutlineThickness(10);
 
     sf::RectangleShape MakeBox;//= sf::Rect(400, 350, 100, 50);
-    MakeBox.setPosition(200, 285);
+    MakeBox.setPosition(200, 285-100);
     MakeBox.setSize(sf::Vector2f(400,50));
     //MakeBox.setFillColor(sf::Color::Black);
     MakeBox.setOutlineColor(sf::Color::Black);
     MakeBox.setOutlineThickness(10);
 
     sf::RectangleShape ModelBox;//= sf::Rect(400, 350, 100, 50);
-    ModelBox.setPosition(200, 360);
+    ModelBox.setPosition(200, 360-100);
     ModelBox.setSize(sf::Vector2f(400,50));
     //ModelBox.setFillColor(sf::Color::Black);
     ModelBox.setOutlineColor(sf::Color::Black);
     ModelBox.setOutlineThickness(10);
-    std::vector<sf::RectangleShape> statesBox, modelsBox, makesBox;
+
+    sf::RectangleShape ColorBox;//= sf::Rect(400, 350, 100, 50);
+    ColorBox.setPosition(200, 435-100);
+    ColorBox.setSize(sf::Vector2f(400,50));
+    ColorBox.setOutlineColor(sf::Color::Black);
+    ColorBox.setOutlineThickness(10);
+
+    std::vector<sf::RectangleShape> statesBox, modelsBox, makesBox, colorsBox;
 
     sf::Font font;
     if (!font.loadFromFile("../TicketMistressFront/src/font.ttf")){
@@ -149,7 +163,7 @@ std::vector<string> Window::start(){
 
                 for(int i = 0; i < 5; i++) {
                     sf::RectangleShape outlineBox;//= sf::Rect(400, 350, 100, 50);
-                    outlineBox.setPosition(200, 260 + 50*i);
+                    outlineBox.setPosition(200, 260 + 50*i-100);
                     outlineBox.setSize(sf::Vector2f(400, 50));
                     outlineBox.setOutlineColor(sf::Color::Black);
                     outlineBox.setOutlineThickness(5);
@@ -197,7 +211,7 @@ std::vector<string> Window::start(){
 
                 for(int i = 0; i < 5; i++) {
                     sf::RectangleShape outlineBox;//= sf::Rect(400, 350, 100, 50);
-                    outlineBox.setPosition(200, 335 + 50*i);
+                    outlineBox.setPosition(200, 335 + 50*i-100);
                     outlineBox.setSize(sf::Vector2f(400, 50));
                     outlineBox.setOutlineColor(sf::Color::Black);
                     outlineBox.setOutlineThickness(5);
@@ -223,9 +237,9 @@ std::vector<string> Window::start(){
 
             if(modelSelection){
                 modelsBox.clear();
-                for(int i = 0; i < 3; i++) {
+                for(int i = 0; i < 5; i++) {
                     sf::RectangleShape outlineBox;//= sf::Rect(400, 350, 100, 50);
-                    outlineBox.setPosition(200, 415 + 50*i);
+                    outlineBox.setPosition(200, 415 + 50*i-100);
                     outlineBox.setSize(sf::Vector2f(400, 50));
                     outlineBox.setOutlineColor(sf::Color::Black);
                     outlineBox.setOutlineThickness(5);
@@ -234,7 +248,7 @@ std::vector<string> Window::start(){
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && event.type == sf::Event::KeyPressed) {
                     //states list should be changed to model list
 
-                    if(listIndex+3 != modelsList.size()) {
+                    if(listIndex+5 != modelsList.size()) {
                         listIndex++;
                     }
                 }
@@ -253,6 +267,45 @@ std::vector<string> Window::start(){
 //                            std::cout << listIndex << std::endl;
                             model = modelsList[i + listIndex];
                             modelSelection = false;
+                            selected = false;
+                            infoType = -1;
+                        }
+                    }
+                    //listIndex = 0;
+                }
+            }
+
+            if(colorSelection){
+                colorsBox.clear();
+                for(int i = 0; i < 4; i++) {
+                    sf::RectangleShape outlineBox;//= sf::Rect(400, 350, 100, 50);
+                    outlineBox.setPosition(200, 495 + 50*i-100);
+                    outlineBox.setSize(sf::Vector2f(400, 50));
+                    outlineBox.setOutlineColor(sf::Color::Black);
+                    outlineBox.setOutlineThickness(5);
+                    colorsBox.push_back(outlineBox);
+                }
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && event.type == sf::Event::KeyPressed) {
+                    //states list should be changed to model list
+
+                    if(listIndex+4 != colorsList.size()) {
+                        listIndex++;
+                    }
+                }
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && event.type == sf::Event::KeyPressed) {
+                    if(listIndex != 0) {
+                        listIndex--;
+                    }
+                }
+                auto position = sf::Mouse::getPosition(window);
+                if(sf::Mouse::isButtonPressed(sf::Mouse::Left) && infoType == 3) {
+                    //colorsbox.size()
+                    for (int i = 0; i < colorsBox.size(); i++) {
+                        if (colorsBox[i].getGlobalBounds().contains(position.x, position.y)) {
+                            //mfake = modelsBox[]
+//                            std::cout << listIndex << std::endl;
+                            color = colorsList[i + listIndex];
+                            colorSelection = false;
                             selected = false;
                             infoType = -1;
                         }
@@ -281,24 +334,35 @@ std::vector<string> Window::start(){
                     stateSelection = true;
                     makeSelection = false;
                     modelSelection = false;
+                    colorSelection = false;
                 }
                 else if(MakeBox.getGlobalBounds().contains(position.x, position.y)){
                     infoType = 1;
                     stateSelection = false;
                     makeSelection = true;
                     modelSelection = false;
+                    colorSelection = false;
                 }
                 else if(ModelBox.getGlobalBounds().contains(position.x, position.y)){
                     infoType = 2;
                     stateSelection = false;
                     makeSelection = false;
                     modelSelection = true;
+                    colorSelection = false;
+                }
+                else if(ColorBox.getGlobalBounds().contains(position.x, position.y)){
+                    infoType = 3;
+                    stateSelection = false;
+                    makeSelection = false;
+                    modelSelection = false;
+                    colorSelection = true;
                 }
                 else{
                     infoType = -1;
                     stateSelection = false;
                     makeSelection = false;
                     modelSelection = false;
+                    colorSelection = false;
                 }
                 // in any of the text rectangles
                 //listIndex = 0;
@@ -307,6 +371,7 @@ std::vector<string> Window::start(){
                 infoVec[0] = name;
                 infoVec[1] = make;
                 infoVec[2] = model;
+                infoVec[3] = color;
                 SecondScreen(infoVec, window);
             }
         }
@@ -316,25 +381,32 @@ std::vector<string> Window::start(){
         window.draw(StateBox);
         window.draw(MakeBox);
         window.draw(ModelBox);
+        window.draw(ColorBox);
 
-        printText("Welcome To Ticket Mistress!", true, width*16, 16 * height + 50 -150, &window, 24, true, true);
+        printText("Welcome To Ticket Mistress!", true, width*16, 16 * height + -100-100, &window, 24, true, true);
 
         if(infoType == 0){
-            printText("Your State: " + name +"|", false, width*16, 16 * height + 50 -75, &window, 18, true, true);
+            printText("Your State: " + name +"|", false, width*16, 16 * height + 50 -75-100, &window, 18, true, true);
         }else{
-            printText("Your State: " + name, false, width*16, 16 * height + 50 -75, &window, 18, true, true);
+            printText("Your State: " + name, false, width*16, 16 * height + 50 -75-100, &window, 18, true, true);
         }
 
         if(infoType == 1){
-            printText("Your Car Make: "+make+"|", false, width*16, 16 * height + 50 , &window, 18, false, true);
+            printText("Your Car Make: "+make+"|", false, width*16, 16 * height + 50-100 , &window, 18, false, true);
         }else{
-            printText("Your Car Make: "+make, false, width*16, 16 * height + 50 , &window, 18, false, true);
+            printText("Your Car Make: "+make, false, width*16, 16 * height + 50-100 , &window, 18, false, true);
         }
 
         if(infoType == 2){
-            printText("Your Car Model: "+model+"|", false, width*16, 16 * height + 50 +75 , &window, 18, false, true);
+            printText("Your Car Model: "+model+"|", false, width*16, 16 * height + 50 +75-100 , &window, 18, false, true);
         }else{
-            printText("Your Car Model: "+model, false, width*16, 16 * height + 50 +75 , &window, 18, false, true);
+            printText("Your Car Model: "+model, false, width*16, 16 * height + 50 +75-100 , &window, 18, false, true);
+        };
+
+        if(infoType == 3){
+            printText("Your Car Color: "+color+"|", false, width*16, 16 * height + 100 , &window, 18, false, true);
+        }else{
+            printText("Your Car Color: "+color, false, width*16, 16 * height + 100 , &window, 18, false, true);
         };
 
         if(!selected && infoType == 0){
@@ -342,7 +414,7 @@ std::vector<string> Window::start(){
                 window.draw(nextState);
             }
             for(int i = 0; i < 5; i++){
-                printText(statesList[i + listIndex], false, 400, 50 * i + 280, &window, 18, true, true);
+                printText(statesList[i + listIndex], false, 400, 50 * i + 280-100, &window, 18, true, true);
             }
         }
         if(!selected && infoType == 1){
@@ -352,7 +424,7 @@ std::vector<string> Window::start(){
             for (int i = 0; i < 5; i++) {
                 //edit for make location
                 //states list changed to make list
-                printText(makesList[i + listIndex], false, 400, 50 * i + 350, &window, 18, true, true);
+                printText(makesList[i + listIndex], false, 400, 50 * i + 350-100, &window, 18, true, true);
             }
         }
         //working on this one
@@ -360,10 +432,21 @@ std::vector<string> Window::start(){
             for(auto nextModel : modelsBox){
                 window.draw(nextModel);
             }
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 5; i++) {
                 //edit for make location
                 //states list changed to model list
-                printText(modelsList[i + listIndex], false, 400, 50 * i + 430, &window, 18, true, true);
+                printText(modelsList[i + listIndex], false, 400, 50 * i + 430-100, &window, 18, true, true);
+            }
+        }
+
+        if(!selected && infoType == 3){
+            for(auto nextColor : colorsBox){
+                window.draw(nextColor);
+            }
+            for (int i = 0; i < 4; i++) {
+                //edit for make location
+                //states list changed to model list
+                printText(colorsList[i + listIndex], false, 400, 50 * i + 510-100, &window, 18, true, true);
             }
         }
 
@@ -372,6 +455,7 @@ std::vector<string> Window::start(){
     infoVec[0] = name;
     infoVec[1] = make;
     infoVec[2] = model;
+    infoVec[3] = color;
     return infoVec;
 }
 
